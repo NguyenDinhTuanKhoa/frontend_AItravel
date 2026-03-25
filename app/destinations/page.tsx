@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -106,7 +106,7 @@ const mockDestinations: Destination[] = [
   },
 ];
 
-export default function DestinationsPage() {
+function DestinationsContent() {
   const { user } = useAuth();
   const searchParams = useSearchParams();
   const [destinations, setDestinations] = useState<Destination[]>([]);
@@ -431,5 +431,18 @@ export default function DestinationsPage() {
 
       <Footer />
     </div>
+  );
+}
+
+// Wrapper component với Suspense boundary cho useSearchParams
+export default function DestinationsPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin w-16 h-16 border-4 border-sky-500 border-t-transparent rounded-full"></div>
+      </div>
+    }>
+      <DestinationsContent />
+    </Suspense>
   );
 }
